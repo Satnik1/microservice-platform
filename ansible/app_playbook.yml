@@ -1,0 +1,32 @@
+- name: Test app deploy
+  hosts: all
+  vars:
+    - app_version: "latest"
+    - app_name: "skillbox-app"
+  become: true
+
+  tasks:
+
+    - name: Pull Docker image from Docker Hub
+      community.docker.docker_image:
+        name: "satnik01/skillbox-app:{{ app_version }}"
+        source: pull
+       
+    - name: systemd unit
+      template:
+        src: "./app-unit.service.j2"
+        dest: "/etc/systemd/system/{{ app_name }}.service"
+      notify:
+        - reload systemd
+
+    - name: Manage a systemd service  
+      ansible.builtin.systemd:  
+        name: "{{ app_name }}.service" 
+        state: started  
+        enabled: yes  
+        daemon_reload: yes
+
+  handlers:
+    - name: reload systemd
+      systemd:
+        daemon_reload: yes

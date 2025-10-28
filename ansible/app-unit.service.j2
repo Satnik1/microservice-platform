@@ -1,0 +1,16 @@
+[Unit]
+Description=Test Docker App
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+ExecStartPre=-/usr/bin/docker stop {{ app_name }}
+ExecStartPre=-/usr/bin/docker rm {{ app_name }}
+ExecStart=/usr/bin/docker run --name {{ app_name}} -p 8080:8080 satnik01/skillbox-app:{{ app_version }}
+ExecStop=/usr/bin/docker stop {{ app_name }}
+
+[Install]
+WantedBy=multi-user.target
