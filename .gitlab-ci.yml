@@ -10,7 +10,7 @@ stages:
 
 .get_app: &get_app
   before_script:
-    - apt-get update && apt-get install -y git
+    - apk-update && apt install -y git
     - git clone https://${GIT_LOGIN}:${GIT_PASSWORD}@gitlab.skillbox.ru/nikita_satkanov/devops-basics-final-project.git
     - cd devops-basics-final-project/Final_project
   
