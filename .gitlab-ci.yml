@@ -24,7 +24,7 @@ test_before_build:
     - chmod +x scripts/test_in_docker.sh
     - ./run-test.sh
   artifacts:
-    path:
+    paths:
       - devops-basics-final-project/Final_project/
 
 build_push_app:
