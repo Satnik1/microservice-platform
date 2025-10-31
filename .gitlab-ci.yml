@@ -22,6 +22,8 @@ test_before_build:
   script:
     - chmod +x run-tests.sh
     - chmod +x scripts/test_in_docker.sh
+    - pwd
+    - ls -la
     - ./run-tests.sh
   artifacts:
     paths:
