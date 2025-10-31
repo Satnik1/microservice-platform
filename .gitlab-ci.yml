@@ -22,7 +22,7 @@ test_before_build:
   script:
     - chmod +x run-test.sh
     - chmod +x scripts/test_in_docker.sh
-    - ./run-test.sh
+    - ./run-tests.sh
   artifacts:
     paths:
       - devops-basics-final-project/Final_project/
