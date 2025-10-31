@@ -20,7 +20,7 @@ test_before_build:
   stage: test
   <<: *get_app
   script:
-    - chmod +x run-test.sh
+    - chmod +x run-tests.sh
     - chmod +x scripts/test_in_docker.sh
     - ./run-tests.sh
   artifacts:
