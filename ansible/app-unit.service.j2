@@ -9,7 +9,7 @@ Restart=always
 RestartSec=10
 ExecStartPre=-/usr/bin/docker stop {{ app_name }}
 ExecStartPre=-/usr/bin/docker rm {{ app_name }}
-ExecStart=/usr/bin/docker run --name {{ app_name}} -p 8080:8080 satnik01/skillbox-app:{{ app_version }}
+ExecStart=/usr/bin/docker run --name {{ app_name}} -p 8080:8080 {{ci_registry_image}}:{{ app_version }}
 ExecStop=/usr/bin/docker stop {{ app_name }}
 
 [Install]

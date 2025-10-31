@@ -1,0 +1,70 @@
+stages:
+  - build
+  - test
+  - deploy
+
+.d_in_d: &d_in_d
+  image: docker:latest          
+  services:
+    - docker:dind
+
+.get_app: &get_app
+  before_script:
+    - apt-get update && apt-get install -y git
+    - git clone https://${GIT_LOGIN}:${GIT_PASSWORD}@gitlab.skillbox.ru/nikita_satkanov/devops-basics-final-project.git
+    - cd devops-basics-final-project/Final_project
+  
+
+test_before_build:
+  <<: *d_in_d
+  stage: test
+  <<: *get_app
+  script:
+    - chmod +x run-test.sh
+    - chmod +x scripts/test_in_docker.sh
+    - ./run-test.sh
+  artifacts:
+    path:
+      - devops-basics-final-project/Final_project/
+
+build_push_app:
+  <<: *d_in_d
+  stage: build
+  dependencies:
+    - test_before_build
+  script:
+    - cd devops-basics-final-project/Final_project
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build . -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+
+
+linter_ansible:
+  stage: test
+  image: python:3.9-alpine
+  script:
+    - pip install ansible-lint
+    - ansible-lint app_playbook.yml 
+    - ansible-playbook --syntax-check app_playbook.yml
+
+deploy:
+  stage: deploy
+  image: debian:latest
+  before_script:
+    - apt-get update && apt-get install -y ansible openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$PRIVATE_VM_KEY" > ~/.ssh/timeweb  
+    - chmod 600 ~/.ssh/timeweb
+  script:
+    - ansible-playbook app_playbook.yml \
+      -e "ci_registry=$CI_REGISTRY \
+      ci_registry_user=$CI_REGISTRY_USER \
+      ci_registry_password=$CI_REGISTRY_PASSWORD \
+      ci_registry_image=$CI_REGISTRY_IMAGE \
+      app_version=$CI_COMMIT_SHORT_SHA"
+  dependencies:
+    - linter_ansible  
+  only:
+    - master
+    - uat
+    
