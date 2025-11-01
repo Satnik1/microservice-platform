@@ -60,7 +60,6 @@ deploy:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - eval $(ssh-agent -s)
-    - chmod 600 ~/.ssh/timeweb
     - echo "$PRIVATE_VM_KEY" | tr -d '\r' | ssh-add -
     - ssh-add -l
   script:
