@@ -4,9 +4,12 @@ stages:
   - deploy
 
 .d_in_d: &d_in_d
-  image: docker:latest          
+  image: docker:20.10          
   services:
-    - docker:dind
+    - docker:20.10-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
 
 .get_app: &get_app
   before_script:
