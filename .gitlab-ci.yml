@@ -38,17 +38,14 @@ build_push_app:
     - test_before_build
   script:
     - cd devops-basics-final-project/Final_project
-    - echo "=== DEBUG ==="
     - echo "CI_REGISTRY: $CI_REGISTRY"
     - echo "CI_REGISTRY_USER: $CI_REGISTRY_USER"
     - echo "CI_REGISTRY_PASSWORD length: ${#CI_REGISTRY_PASSWORD}"
     - echo "CI_REGISTRY_IMAGE: $CI_REGISTRY_IMAGE"
     - echo "CI_JOB_TOKEN: ${#CI_JOB_TOKEN}"
-    - echo "=============="
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build . -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-
 
 linter_ansible:
   stage: test
