@@ -39,7 +39,7 @@ build_push_app:
   script:
     - cd devops-basics-final-project/Final_project
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    - docker build . -t satnik01/skillbox-app:$CI_COMMIT_SHORT_SHA .
+    - docker build . -t satnik01/skillbox-app:$CI_COMMIT_SHORT_SHA 
     - docker push satnik01/skillbox-app:$CI_COMMIT_SHORT_SHA
 
 linter_ansible:
