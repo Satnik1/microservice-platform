@@ -62,7 +62,7 @@ deploy:
     - echo "$PRIVATE_VM_KEY" > ~/.ssh/timeweb
     - chmod 600 ~/.ssh/timeweb
   script:
-    - ansible-playbook -i ansible/inventory/hosts ansible/app_playbook.yml -e "app_version=$CI_COMMIT_SHORT_SHA"
+    - ansible-playbook -i ansible/inventory/hosts ansible/app_playbook.yml -e "app_version=$CI_COMMIT_SHORT_SHA" -vvv
   dependencies:
     - linter_ansible  
   only:
