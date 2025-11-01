@@ -58,10 +58,9 @@ deploy:
   before_script:
     - apt-get update && apt-get install -y ansible openssh-client
     - mkdir -p ~/.ssh
-    - echo "$PRIVATE_VM_KEY" > ~/.ssh/timeweb  
+    - echo "$PRIVATE_VM_KEY" > ~/.ssh/timeweb
+    - chmod 700 ~/.ssh 
     - chmod 600 ~/.ssh/timeweb
-    - ssh-keygen -l -f ~/.ssh/timeweb|| echo "Key validation failed"
-    - ssh -i ~/.ssh/timeweb -o StrictHostKeyChecking=no -o ConnectTimeout=10 -v ubuntu@62.84.113.29 "echo 'SSH test successful'" || echo "SSH failed"
   script:
     - ansible-playbook -i ansible/inventory/hosts ansible/app_playbook.yml -e "app_version=$CI_COMMIT_SHORT_SHA"
   dependencies:
