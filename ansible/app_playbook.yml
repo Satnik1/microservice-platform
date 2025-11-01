@@ -9,7 +9,7 @@
 
     - name: Pull Docker image from Gitlab regestry
       community.docker.docker_image:
-        name: "{{ app_name }}:{{ app_version }}"
+        name: "satnik01/skillbox-app:{{ app_version }}"
         source: pull
 
     - name: systemd unit
