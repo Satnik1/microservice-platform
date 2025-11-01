@@ -60,6 +60,7 @@ deploy:
     - mkdir -p ~/.ssh
     - echo "$PRIVATE_VM_KEY" > ~/.ssh/timeweb  
     - chmod 600 ~/.ssh/timeweb
+    - ssh -i ~/.ssh/timeweb -o StrictHostKeyChecking=no -o ConnectTimeout=10 -v ubuntu@62.84.113.29 "echo 'SSH test successful'" || echo "SSH failed"
   script:
     - ansible-playbook -i ansible/inventory/hosts ansible/app_playbook.yml -e "app_version=$CI_COMMIT_SHORT_SHA"
   dependencies:
