@@ -59,7 +59,8 @@ deploy:
     - apt-get update -y && apt-get install -y ansible openssh-client 
     - mkdir ~/.ssh
     - chmod 700 ~/.ssh
-    - echo "$PRIVATE_VM_KEY" > ~/.ssh/timeweb
+    - echo "$PRIVATE_VM_KEY" | tr -d '\r' | sed 's/\\n/\n/g' &gt; ~/.ssh/timeweb
+    - ssh-keyscan -H 62.84.113.29 &gt;&gt; ~/.ssh/known_hosts
     - chmod 600 ~/.ssh/timeweb
   script:
     - ansible-playbook -i ansible/inventory/hosts ansible/app_playbook.yml -e "app_version=$CI_COMMIT_SHORT_SHA" -vvv
