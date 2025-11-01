@@ -17,7 +17,7 @@ stages:
   
 
 test_before_build:
-  image: golang:1.16.6-alpine3.14
+  image: golang:1.16.6-buster
   stage: test
   <<: *get_app
   script:
@@ -43,7 +43,7 @@ linter_ansible:
   stage: test
   image: python:3.9-alpine
   script:
-    - pip install ansible/ansible-lint
+    - pip install ansible-lint
     - ansible-galaxy collection install community.docker
     - ansible-lint ansible/app_playbook.yml 
     - ansible-playbook --syntax-check ansible/app_playbook.yml
