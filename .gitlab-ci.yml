@@ -57,12 +57,12 @@ deploy:
   image: debian:latest
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install ansible openssh-client git -y )'
-    - eval $(ssh-agent -s)
-    - echo "$PRIVATE_VM_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - echo "$PRIVATE_VM_KEY" > ~/.ssh/timeweb
+    - eval $(ssh-agent -s)
     - chmod 600 ~/.ssh/timeweb
+    - echo "$PRIVATE_VM_KEY" | tr -d '\r' | ssh-add -
+    - ssh-add -l
   script:
     - ansible-playbook -i ansible/inventory/hosts ansible/app_playbook.yml -e "app_version=$CI_COMMIT_SHORT_SHA"
   dependencies:
