@@ -57,15 +57,10 @@ deploy:
   image: debian:latest
   before_script:
     - apt-get update -y && apt-get install -y ansible openssh-client 
-    - mkdir -p ~/.ssh
-    - echo "=== Using File-type variable correctly ==="
-    - cp $PRIVATE_VM_KEY ~/.ssh/timeweb
+    - mkdir ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$PRIVATE_VM_KEY" > ~/.ssh/timeweb
     - chmod 600 ~/.ssh/timeweb
-    - echo "=== Key file info ==="
-    - file ~/.ssh/timeweb
-    - ls -la ~/.ssh/timeweb
-    - echo "=== Testing SSH ==="
-    - ssh -i ~/.ssh/timeweb -o StrictHostKeyChecking=no -o ConnectTimeout=5 ubuntu@62.84.113.29 "echo 'SSH SUCCESS'" || echo "SSH FAILED"
   script:
     - ansible-playbook -i ansible/inventory/hosts ansible/app_playbook.yml -e "app_version=$CI_COMMIT_SHORT_SHA"
   dependencies:
