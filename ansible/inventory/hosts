@@ -3,3 +3,8 @@
 
 [all:vars]
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+control_path = ~/.ssh/ansible-%%r@%%h:%%p
+pipelining = True
+host_key_checking = False
+roles_path = ./roles
+
