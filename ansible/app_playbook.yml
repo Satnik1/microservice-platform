@@ -1,8 +1,8 @@
 - name: Test app deploy
   hosts: all
   vars:
-    - app_version: "latest"
-    - app_name: "skillbox-app"
+    app_version: "latest"
+    app_name: "skillbox-app"
   become: true
 
   tasks:
@@ -15,24 +15,24 @@
 
     - name: Pull Docker image from Gitlab regestry
       community.docker.docker_image:
-        name: "{{ci_registry_image}}:{{ app_version }}"
+        name: "{{ ci_registry_image }}:{{ app_version }}"
         source: pull
-       
+
     - name: systemd unit
-      template:
+      ansible.builtin.template:
         src: "./app-unit.service.j2"
         dest: "/etc/systemd/system/{{ app_name }}.service"
       notify:
         - reload systemd
 
-    - name: Manage a systemd service  
-      ansible.builtin.systemd:  
-        name: "{{ app_name }}.service" 
-        state: started  
-        enabled: yes  
-        daemon_reload: yes
+    - name: Manage a systemd service
+      ansible.builtin.systemd:
+        name: "{{ app_name }}.service"
+        state: started
+        enabled: true
+        daemon_reload: true
 
   handlers:
     - name: reload systemd
-      systemd:
-        daemon_reload: yes
+      ansible.builtin.systemd:
+        daemon_reload: true
