@@ -23,10 +23,9 @@ test_before_build:
   stage: test
   <<: *get_app
   script:
+    - docker info
     - chmod +x run-tests.sh
     - chmod +x scripts/test_in_docker.sh
-    - pwd
-    - ls -la
     - ./run-tests.sh
   artifacts:
     paths:
@@ -49,7 +48,7 @@ linter_ansible:
   image: python:3.9-alpine
   script:
     - pip install ansible-lint
-    - ansible-lint app_playbook.yml 
+    - ansible-lint ansible/app_playbook.yml 
     - ansible-playbook --syntax-check app_playbook.yml
 
 deploy:
@@ -61,7 +60,7 @@ deploy:
     - echo "$PRIVATE_VM_KEY" > ~/.ssh/timeweb  
     - chmod 600 ~/.ssh/timeweb
   script:
-    - ansible-playbook app_playbook.yml \
+    - ansible-playbook ansible/app_playbook.yml \
       -e "ci_registry=$CI_REGISTRY \
       ci_registry_user=$CI_REGISTRY_USER \
       ci_registry_password=$CI_REGISTRY_PASSWORD \
