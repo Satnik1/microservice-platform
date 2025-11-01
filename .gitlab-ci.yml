@@ -59,9 +59,8 @@ deploy:
     - 'which ssh-agent || ( apt-get update -y && apt-get install ansible openssh-client git -y )'
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - eval $(ssh-agent -s)
-    - echo "$PRIVATE_VM_KEY" | tr -d '\r' | ssh-add -
-    - ssh-add -l
+    - echo "$PRIVATE_VM_KEY" > ~/.ssh/timeweb
+    - chmod 600 ~/.ssh/timeweb
   script:
     - ansible-playbook -i ansible/inventory/hosts ansible/app_playbook.yml -e "app_version=$CI_COMMIT_SHORT_SHA"
   dependencies:
