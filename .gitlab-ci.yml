@@ -52,7 +52,7 @@ linter_ansible:
     - ansible-playbook --syntax-check ansible/app_playbook.yml
   allow_failure: true
 
-deploy:
+deploy_app:
   stage: deploy
   image: debian:latest
   before_script:
