@@ -58,19 +58,9 @@ deploy:
   before_script:
     - apt-get update -y && apt-get install -y ansible openssh-client 
     - mkdir -p ~/.ssh
-    - echo "=== Exact key content analysis ==="
-    - echo "Key length ${#PRIVATE_VM_KEY} characters"
-    - echo "First 50 chars '${PRIVATE_VM_KEY:0:50}'"
-    - echo "Last 50 chars '${PRIVATE_VM_KEY:-50}'"
-    - echo "$PRIVATE_VM_KEY" > ~/.ssh/timeweb
+    - chmod 700 ~/.ssh
+    - cp $PRIVATE_VM_KEY ~/.ssh/timeweb
     - chmod 600 ~/.ssh/timeweb
-    - echo "=== File analysis ==="
-    - ls -la ~/.ssh/timeweb
-    - hexdump -C ~/.ssh/timeweb | head -n 5
-    - echo "=== SSH version ==="
-    - ssh -V
-    - echo "=== Testing connection ==="
-    - ssh -i ~/.ssh/timeweb -o StrictHostKeyChecking=no -v ubuntu@62.84.113.29 "echo 'SUCCESS'" 2>&1 | grep -E "(key|error|denied)"
   script:
     - ansible-playbook -i ansible/inventory/hosts ansible/app_playbook.yml -e "app_version=$CI_COMMIT_SHORT_SHA"
   dependencies:
