@@ -38,11 +38,9 @@ build_push_app:
     - test_before_build
   script:
     - cd devops-basics-final-project/Final_project
-    - echo "CI_REGISTRY_USER=$CI_REGISTRY_USER"
-    - echo "CI_REGISTRY=$CI_REGISTRY"
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build . -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - docker build . -t satnik01/skillbox-app:$CI_COMMIT_SHORT_SHA .
+    - docker push satnik01/skillbox-app:$CI_COMMIT_SHORT_SHA
 
 linter_ansible:
   stage: test
@@ -64,11 +62,7 @@ deploy:
     - chmod 600 ~/.ssh/timeweb
   script:
     - ansible-playbook app_playbook.yml \
-      -e "ci_registry=$CI_REGISTRY \
-      ci_registry_user=$CI_REGISTRY_USER \
-      ci_registry_password=$CI_REGISTRY_PASSWORD \
-      ci_registry_image=$CI_REGISTRY_IMAGE \
-      app_version=$CI_COMMIT_SHORT_SHA"
+      -e "app_version=$CI_COMMIT_SHORT_SHA"
   dependencies:
     - linter_ansible  
   only:

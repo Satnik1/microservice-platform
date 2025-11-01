@@ -7,15 +7,9 @@
 
   tasks:
 
-    - name: Log in Docker regestry
-      community.docker.docker_login:
-        registry: "{{ ci_registry }}"
-        username: "{{ ci_registry_user }}"
-        password: "{{ ci_registry_password }}"
-
     - name: Pull Docker image from Gitlab regestry
       community.docker.docker_image:
-        name: "{{ ci_registry_image }}:{{ app_version }}"
+        name: "{{ app_name }}:{{ app_version }}"
         source: pull
 
     - name: systemd unit
