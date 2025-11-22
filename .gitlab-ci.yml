@@ -27,7 +27,7 @@ stages:
     - ssh-keyscan -H "$IP_ADDRESS" >> ~/.ssh/known_hosts
     - chmod 600 ~/.ssh/timeweb
   script:
-    - ansible-playbook -i ansible/inventory/$HOST ansible/app_playbook.yml -e "app_version=$APP_VERSION" -vvv
+    - ansible-playbook -i ansible/inventory/$HOST ansible/app_playbook.yml -e "app_version=$APP_VERSION" --private-key=~/.ssh/timeweb -vvv
   
   
 
