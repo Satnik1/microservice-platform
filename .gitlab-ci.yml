@@ -85,7 +85,6 @@ prod_deploy:
     APP_VERSION: $CI_COMMIT_SHORT_SHA
     HOST: prod_hosts
   <<: *deploy_app
-  when:
-    - manual  
+  when: manual  
   only:
     - master
