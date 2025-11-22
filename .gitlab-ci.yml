@@ -75,6 +75,7 @@ test_app:
   dependencies:
     - linter_ansible  
   only:
+    - master
     - uat
     
 prod_deploy:
@@ -88,3 +89,4 @@ prod_deploy:
   when: manual  
   only:
     - master
+    
