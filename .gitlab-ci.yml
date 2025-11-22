@@ -17,6 +17,18 @@ stages:
     - apk update && apk add git bash
     - git clone https://${GIT_LOGIN}:${GIT_PASSWORD}@gitlab.skillbox.ru/nikita_satkanov/devops-basics-final-project.git
     - cd devops-basics-final-project/Final_project
+
+.deploy_app: &deploy_app
+  before_script:
+    - apt-get update -y && apt-get install -y ansible openssh-client 
+    - mkdir ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$PRIVATE_VM_KEY" | tr -d '\r' | sed 's/\\n/\n/g' > ~/.ssh/timeweb
+    - ssh-keyscan -H "$IP_ADDRESS" >> ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/timeweb
+  script:
+    - ansible-playbook -i ansible/inventory/$HOST ansible/app_playbook.yml -e "app_version=$APP_VERSION" -vvv
+  
   
 
 test_before_build:
@@ -52,21 +64,28 @@ linter_ansible:
     - ansible-playbook --syntax-check ansible/app_playbook.yml
   allow_failure: true
 
-deploy_app:
+test_app:
   stage: deploy
   image: debian:latest
-  before_script:
-    - apt-get update -y && apt-get install -y ansible openssh-client 
-    - mkdir ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo "$PRIVATE_VM_KEY" | tr -d '\r' | sed 's/\\n/\n/g' > ~/.ssh/timeweb
-    - ssh-keyscan -H 158.160.35.53 >> ~/.ssh/known_hosts
-    - chmod 600 ~/.ssh/timeweb
-  script:
-    - ansible-playbook -i ansible/inventory/hosts ansible/app_playbook.yml -e "app_version=$CI_COMMIT_SHORT_SHA" -vvv
+  variables:
+    IP_ADDRESS: 158.160.32.56
+    APP_VERSION: $CI_COMMIT_SHORT_SHA
+    HOST: test_hosts
+  <<: *deploy_app
   dependencies:
     - linter_ansible  
   only:
-    - master
     - uat
     
+prod_deploy:
+  stage: deploy
+  image: debian:latest
+  variables:
+    IP_ADDRESS: 158.160.104.70
+    APP_VERSION: $CI_COMMIT_SHORT_SHA
+    HOST: prod_hosts
+  <<: *deploy_app
+  when:
+    - manual  
+  only:
+    - master
