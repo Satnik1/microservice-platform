@@ -68,7 +68,7 @@ test_app:
   stage: deploy
   image: debian:latest
   variables:
-    IP_ADDRESS: 158.160.32.56
+    IP_ADDRESS: 178.154.202.168
     APP_VERSION: $CI_COMMIT_SHORT_SHA
     HOST: test_hosts
   <<: *deploy_app
@@ -82,7 +82,7 @@ prod_deploy:
   stage: deploy
   image: debian:latest
   variables:
-    IP_ADDRESS: 158.160.104.70
+    IP_ADDRESS: 178.154.201.229
     APP_VERSION: $CI_COMMIT_SHORT_SHA
     HOST: prod_hosts
   <<: *deploy_app
