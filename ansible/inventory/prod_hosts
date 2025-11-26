@@ -1,5 +1,5 @@
 [app_server]
-prod_app_ext ansible_host=178.154.201.229
+prod_app_ext ansible_host=158.160.120.171
 
 [all:vars]
 ansible_user=ubuntu
